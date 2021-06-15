@@ -1,5 +1,5 @@
 # VladmiR
-- Vladmir is a tool to predic alzheimer deasease from a  set of relative count kmers SRA data from NCBI. 
+- Vladmir is a tool to predict alzheimer deasease from a  set of relative count kmers SRA data from NCBI. 
 
 
 
