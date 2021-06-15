@@ -16,15 +16,15 @@ In progress...
 - `Makefile` This is the main archive used to configure conda environment.
 
 ## Configuring conda environment:
-    ```
+  
     $ make setup
-    ```
+    
 - Use the comand above to create a new configured conda environmet or update if it has already created. After that, use the follow comand: `  conda activate vladmir` to activate the environment.
 
     ```
     $ make tools
     ```
-    - Install sra-toolkit and jellyfish. Before, make sure you are in vladmir activated environment 
+- Install sra-toolkit and jellyfish. Before, make sure you are in vladmir activated environment 
 
     
 
