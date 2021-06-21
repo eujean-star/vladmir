@@ -1,3 +1,4 @@
+from os import path
 import pandas as pd
 from pandas.core.frame import DataFrame
 
@@ -37,7 +38,7 @@ def config_df(path:str, feature:int) -> DataFrame:
     '''    
    
     df = contagem_kmers(path)
-    data = df.T.copy()
+    data = df.T
     data.rename(columns=data.loc['kmers'], inplace=True)
     data.drop('kmers', inplace=True)
     data['feature'] = feature
@@ -70,4 +71,5 @@ if __name__ == '__main__':
     data = data.append(config_df('../data/raw/con/SRR837480.kmers', 0))
 
     data.fillna(0, inplace=True)
-    data.to_csv('/home/jan/vladmir/data/processed/initial_data_processed.csv', index=False)
+    data.to_csv('../data/processed/initial_data_processed.csv', index=False)
+    print(f'dataset salvo em /data/processed')
