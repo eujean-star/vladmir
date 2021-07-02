@@ -1,4 +1,3 @@
-from os import path
 import pandas as pd
 from pandas.core.frame import DataFrame
 
@@ -18,7 +17,6 @@ def contagem_kmers(path:str) -> DataFrame:
     
     return data
 
-
 def config_df(path:str, feature:int) -> DataFrame:
     '''
     Configure dataframe and add a label tha indicate if it's alzheimer patiente 
@@ -36,7 +34,7 @@ def config_df(path:str, feature:int) -> DataFrame:
     Dataframe. 
     
     '''    
-   
+
     df = contagem_kmers(path)
     data = df.T
     data.rename(columns=data.loc['kmers'], inplace=True)
@@ -45,31 +43,42 @@ def config_df(path:str, feature:int) -> DataFrame:
     data.fillna(0, inplace=True)
     return data
 
+
 if __name__ == '__main__':
-
-    print('configurando o grupo que apresenta a doença')
-    data = config_df('../data/raw/al/SRR837438.kmers', 1)
-    data = data.append(config_df('../data/raw/al/SRR837439.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837440.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837441.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837442.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837443.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837444.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837445.kmers', 1))
-    data = data.append(config_df('../data/raw/al/SRR837446.kmers', 1))
     
-    print('Adicionando os dados do grupo controle')
-    data = data.append(config_df('../data/raw/con/SRR837471.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837472.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837473.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837474.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837475.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837476.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837477.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837478.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837479.kmers', 0))
-    data = data.append(config_df('../data/raw/con/SRR837480.kmers', 0))
+    '''Abrindo o df contendo os SRR'''
+    df_metadata = pd.read_csv('data/SraRunTable.txt', sep=',')
+    
+    ''' Esse df_final é onde os arquivos *.kmer vão ser guardados depois de serem processados'''
+    df_final = pd.DataFrame() 
+    '''Onde a iteração acontece. O método iterrows retorna pra gente tanto o índice quanto o conteudo do mesmo
+    sendo:
+    r: Índice
+    row: A linha com o conteudo de todas as colunas'''
+    for r, row in df_metadata.iterrows():
+        '''row.Run acessa o SRR na coluna Run.'''
+        srr = row.Run    
+        ''' O objeto srr guarda o valor (código de acesso do arquivo que ta na pasta data/raw)
+        e utilizei essa váriavel para iterar sobre os arquivos na pasta'''
+        
+        '''Como a coluna Group indica se é Grupo de controle ou não dá pra usar estrutura de condição pra setar o parametro
+        feature da função condif_df'''
+        if 'alzheimer' in row.Group:
+            '''Note que esse feat é o valor do paremetro feature caso a palavra alzheime estiver na coluna Group'''
+            feat = 1
+            df_final = df_final.append(config_df(f'data/raw/{srr}.kmer', feature = feat))
+        else:
+            '''Caso contrário, 0. Isso indica que é do grupo controle '''
+            feat = 0
+            df_final = df_final.append(config_df(f'data/raw/{srr}.kmer', feature = feat))
+    '''
+    Como o modelo precisa necessariamente que o valor das colunas seja numeros, os valores nulos (Missing value)
+    serão preenchidos com 0
+    '''
+    df_final.fillna(0, inplace=True)        
+    '''Salvo  o dataframe formatado na pasta data/processed'''
+    df_final.to_csv('data/processed/dataframe_processed.csv', index=False)
 
-    data.fillna(0, inplace=True)
-    data.to_csv('../data/processed/initial_data_processed.csv', index=False)
-    print(f'dataset salvo em /data/processed')
+
+    #Esse script precisa ser rodado na pasta do projeto. 
+    # Se for executado dentro de outra pasta vai dar erro por conta do path
