@@ -1,0 +1,11 @@
+name: vladmir
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.8
+  - jupyterlab
+  - pip
+  - pip:
+    - -r requirements.txt
+    - -e .

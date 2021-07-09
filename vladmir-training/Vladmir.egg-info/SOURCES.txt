@@ -1,0 +1,6 @@
+README.md
+setup.py
+Vladmir.egg-info/PKG-INFO
+Vladmir.egg-info/SOURCES.txt
+Vladmir.egg-info/dependency_links.txt
+Vladmir.egg-info/top_level.txt
