@@ -5,6 +5,8 @@ channels:
 dependencies:
   - python=3.8
   - jupyterlab
+  - jellyfish
+  - sra-tools
   - pip
   - pip:
     - -r requirements.txt
